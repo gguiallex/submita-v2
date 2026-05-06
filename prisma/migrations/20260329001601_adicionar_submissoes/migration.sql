@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "Submissao" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "titulo" TEXT NOT NULL,
+    "resumo" TEXT NOT NULL,
+    "palavrasChave" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'SUBMETIDO',
+    "eventoId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "Submissao_eventoId_fkey" FOREIGN KEY ("eventoId") REFERENCES "Evento" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

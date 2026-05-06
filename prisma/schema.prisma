@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
-  //output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,35 +8,156 @@ datasource db {
 }
 
 model Edicao {
-  id      Int       @id @default(autoincrement())
-  nome    String
-  ano     Int
+  id      Int      @id @default(autoincrement())
+  ano     Int      @unique
   eventos Evento[]
 }
 
 model Evento {
-  id      Int       @id @default(autoincrement())
-  titulo  String
-  sigla   String
+  id                      Int       @id @default(autoincrement())
+  titulo                  String
+  sigla                   String
 
-  // Relacionamento com Edicao
-  edicaoId  Int
-  edicao    Edicao  @relation(fields: [edicaoId], references: [id])
+  // --- NOVAS CONFIGURAÇÕES (Solicitadas pelo Professor) ---
+  dataInicio              DateTime?
+  dataFim                 DateTime?
+  maxRevisoresPorTrabalho Int       @default(2)
+  maxTrabalhosPorRevisor  Int       @default(5)
 
-  // Relacionamento com o Administrador do Evento
-  adminId    Int
-  admin      Usuario  @relation(fields: [adminId], references: [id])
+  // --- REGRAS DE SUBMISSÃO (Configuráveis) ---
+  exigirResumo            Boolean   @default(true)
+  exigirPdf               Boolean   @default(true)
+  submissaoAnonima        Boolean   @default(false)
+
+  edicaoId                Int
+  edicao                  Edicao    @relation(fields: [edicaoId], references: [id], onDelete: Cascade)
+  adminId                 Int
+  admin                   Usuario   @relation(fields: [adminId], references: [id])
+  
+  submissoes              Submissao[]
+  temas                   Tema[]    @relation("EventoTemas")
+  perguntas               Pergunta[]
+  revisores               RevisorEvento[]
+  atribuicoes             Atribuicao[] // Relação para gerenciar as revisões do evento
 }
 
 model Usuario {
-  id      Int     @id @default(autoincrement())
-  nome    String
-  email   String  @unique
-  role    String  @default("AUTOR") //ADMIN_GERAL, ADMIN_EVENTO, REVISOR, AUTOR
-  eventos Evento[] // Eventos que este usuário administra
+  id                 Int               @id @default(autoincrement())
+  nome               String
+  email              String            @unique
+  role               String            @default("AUTOR") // ADMIN_GERAL, REVISOR, AUTOR
+  
+  departamentoId     Int?
+  departamento       Departamento?     @relation(fields: [departamentoId], references: [id])
+
+  especialidades     Tema[]            @relation("UsuarioEspecialidades")
+  eventosGerenciados Evento[]
+  revisoesVinculadas RevisorEvento[]
+  
+  // Trabalhos que este usuário foi designado para avaliar
+  trabalhosParaAvaliar Atribuicao[]    
 }
 
 model Tema {
-  id    Int    @id @default(autoincrement())
-  nome  String @unique
+  id               Int             @id @default(autoincrement())
+  nome             String          @unique
+  
+  evento           Evento[]        @relation("EventoTemas")
+  submissoes       Submissao[]     @relation("SubmissaoTemas")
+  revisoresGlobais Usuario[]       @relation("UsuarioEspecialidades")
+  revisoresEvento  RevisorEvento[] @relation("RevisorTemas")
+}
+
+model Departamento {
+  id        Int       @id @default(autoincrement())
+  sigla     String    @unique
+  descricao String
+  
+  usuarios  Usuario[]
+  autores   Autor[]
+}
+
+model RevisorEvento {
+  id        Int     @id @default(autoincrement())
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  eventoId  Int
+  evento    Evento  @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  
+  temas     Tema[]  @relation("RevisorTemas")
+}
+
+model Submissao {
+  id            Int      @id @default(autoincrement())
+  titulo        String
+  resumo        String?
+  palavrasChave String
+  arquivoUrl    String?
+  status        String   @default("SUBMETIDO") // SUBMETIDO, EM_REVISAO, AVALIADO
+  mediaFinal    Float    @default(0)
+  createdAt     DateTime @default(now())
+  
+  eventoId      Int
+  evento        Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  autores       Autor[]
+  temas         Tema[]       @relation("SubmissaoTemas")
+  respostas     Resposta[]
+  atribuicoes   Atribuicao[] // Quem está avaliando este trabalho
+}
+
+// --- NOVA TABELA DE ATRIBUIÇÃO (A "Ponte" entre Trabalho e Revisor) ---
+model Atribuicao {
+  id            Int       @id @default(autoincrement())
+  
+  submissaoId   Int
+  submissao     Submissao @relation(fields: [submissaoId], references: [id], onDelete: Cascade)
+  
+  revisorId     Int
+  revisor       Usuario   @relation(fields: [revisorId], references: [id])
+  
+  eventoId      Int
+  evento        Evento    @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+
+  status        String    @default("PENDENTE") // PENDENTE, CONCLUIDO
+  notaFinal     Float?
+  feedback      String?
+  dataAtribuicao DateTime  @default(now())
+
+  @@unique([submissaoId, revisorId]) // Garante que um revisor não receba o mesmo trabalho duas vezes
+}
+
+model Autor {
+  id             Int          @id @default(autoincrement())
+  nome           String
+  email          String
+  submissaoId    Int
+  submissao      Submissao    @relation(fields: [submissaoId], references: [id], onDelete: Cascade)
+  
+  departamentoId Int
+  departamento   Departamento @relation(fields: [departamentoId], references: [id])
+}
+
+model Pergunta {
+  id          Int        @id @default(autoincrement())
+  eventoId    Int
+  evento      Evento     @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  texto       String
+  tipo        String     
+  obrigatoria Boolean    @default(true)
+  ordem       Int        @default(0)
+  opcoes      String?    
+
+  respostas   Resposta[]
+}
+
+model Resposta {
+  id           Int       @id @default(autoincrement())
+  valor        String    
+  perguntaId   Int
+  pergunta     Pergunta  @relation(fields: [perguntaId], references: [id])
+  submissaoId  Int
+  submissao    Submissao @relation(fields: [submissaoId], references: [id], onDelete: Cascade)
+  
+  revisorId    Int?
 }
