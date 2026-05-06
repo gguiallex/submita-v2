@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
 import { ArrowLeft, Tag, CheckCircle2, Settings2, Search, Layers } from 'lucide-react';
+import { EventNavbar } from '../components/EventNavbar';
 import { vincularTemaAction } from './actions';
 
 export default async function VincularTemasEventoPage({
@@ -30,8 +31,8 @@ export default async function VincularTemasEventoPage({
     return (
         <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             <header className="mb-10">
-                <Link 
-                    href={`/admin/edicoes/${id}`} 
+                <Link
+                    href={`/admin/edicoes/${id}`}
                     className="group flex items-center gap-2 text-ufla-blue text-[10px] font-black uppercase tracking-[0.2em] mb-4 hover:text-blue-900 transition-colors"
                 >
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
@@ -46,8 +47,8 @@ export default async function VincularTemasEventoPage({
                             Ative os eixos temáticos para o <span className="text-ufla-blue font-bold">{evento.sigla}</span>
                         </p>
                     </div>
-                    
-                    <Link 
+
+                    <Link
                         href="/admin/temas"
                         className="flex items-center gap-2 bg-slate-100 text-slate-500 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-ufla-blue hover:text-white transition-all shadow-sm"
                     >
@@ -57,10 +58,15 @@ export default async function VincularTemasEventoPage({
                 </div>
             </header>
 
+            <EventNavbar
+                edicaoId={id}
+                eventoId={eventoId}
+            />
+
             <div className="mb-8 relative group">
                 <form method="GET" className="relative">
                     <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-ufla-blue transition-colors" />
-                    <input 
+                    <input
                         name="q"
                         defaultValue={q}
                         placeholder="Pesquisar tema para vincular..."
@@ -79,15 +85,15 @@ export default async function VincularTemasEventoPage({
                         return (
                             <div key={tema.id}>
                                 {/* O SEGREDO: O input checkbox controla o estilo do label abaixo dele via 'peer' */}
-                                <input 
-                                    type="checkbox" 
-                                    name="temasIds" 
+                                <input
+                                    type="checkbox"
+                                    name="temasIds"
                                     id={`tema-${tema.id}`}
                                     value={tema.id}
                                     defaultChecked={estaVinculado}
                                     className="peer hidden"
                                 />
-                                <label 
+                                <label
                                     htmlFor={`tema-${tema.id}`}
                                     className="relative flex items-center justify-between p-6 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-200 bg-white border-slate-100 shadow-sm hover:border-slate-300 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:shadow-lg peer-checked:shadow-emerald-100 group"
                                 >
@@ -115,7 +121,7 @@ export default async function VincularTemasEventoPage({
                 </div>
 
                 <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
-                    <button 
+                    <button
                         type="submit"
                         className="bg-slate-900 text-white px-12 py-5 rounded-full font-black uppercase tracking-[0.2em] text-xs hover:bg-ufla-blue transition-all shadow-[0_20px_50px_rgba(0,0,0,0.3)] active:scale-95 flex items-center gap-4"
                     >

@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { EventNavbar } from '../components/EventNavbar';
 import { ArrowLeft, Save, LayoutDashboard, PencilLine } from 'lucide-react';
 import { editarEventoAction } from '../actions';
 
@@ -39,6 +40,11 @@ export default async function EditarEventoPage({
                     </div>
                 </div>
             </header>
+
+            <EventNavbar
+                edicaoId={id}
+                eventoId={eventoId}
+            />
 
             <form action={editarEventoAction} className="space-y-6">
                 <input type="hidden" name="id" value={evento.id} />

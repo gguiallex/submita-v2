@@ -1,32 +1,71 @@
-'use server'
+"use server";
 
-import prisma from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
+import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function adicionarRevisorAction(formData: FormData) {
-    const nome = formData.get('nome') as string;
-    const email = formData.get('email') as string;
-    const departamentoId = Number(formData.get('departamentoId'));
-    const eventoId = Number(formData.get('eventoId'));
-    const temasIds = JSON.parse(formData.get('temasIds') as string) as number[];
+    const nome = String(formData.get("nome"));
+    const email = String(formData.get("email"));
+    const departamentoId = Number(formData.get("departamentoId"));
+    const eventoId = Number(formData.get("eventoId"));
+    const edicaoId = String(formData.get("edicaoId"));
 
-    // 1. Cria ou recupera o Usuário (baseado no email único)
+    const temasIds = formData.getAll("temasIds").map(Number);
+
     const usuario = await prisma.usuario.upsert({
         where: { email },
-        update: { role: 'REVISOR', departamentoId },
-        create: { nome, email, role: 'REVISOR', departamentoId }
+        update: {
+            nome,
+            role: "REVISOR",
+            departamentoId,
+        },
+        create: {
+            nome,
+            email,
+            role: "REVISOR",
+            departamentoId,
+        },
     });
 
-    // 2. Vincula o Usuário como Revisor deste Evento
-    await prisma.revisorEvento.create({
-        data: {
+    const vinculoExistente = await prisma.revisorEvento.findFirst({
+        where: {
             usuarioId: usuario.id,
-            eventoId: eventoId,
-            temas: {
-                connect: temasIds.map(id => ({ id }))
-            }
-        }
+            eventoId,
+        },
     });
 
-    revalidatePath(`/admin/edicoes/[id]/eventos/${eventoId}/revisores`);
+    if (vinculoExistente) {
+        await prisma.revisorEvento.update({
+            where: { id: vinculoExistente.id },
+            data: {
+                temas: {
+                    set: temasIds.map((id) => ({ id })),
+                },
+            },
+        });
+    } else {
+        await prisma.revisorEvento.create({
+            data: {
+                usuarioId: usuario.id,
+                eventoId,
+                temas: {
+                    connect: temasIds.map((id) => ({ id })),
+                },
+            },
+        });
+    }
+
+    revalidatePath(`/admin/edicoes/${edicaoId}/eventos/${eventoId}/revisores`);
+}
+
+export async function removerRevisorEventoAction(formData: FormData) {
+    const revisorEventoId = Number(formData.get("revisorEventoId"));
+    const eventoId = Number(formData.get("eventoId"));
+    const edicaoId = String(formData.get("edicaoId"));
+
+    await prisma.revisorEvento.delete({
+        where: { id: revisorEventoId },
+    });
+
+    revalidatePath(`/admin/edicoes/${edicaoId}/eventos/${eventoId}/revisores`);
 }

@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { EventNavbar } from '../components/EventNavbar';
 import {
     ArrowLeft,
     FileSearch,
@@ -56,6 +57,11 @@ export default async function TrabalhosEventoPage({
                     </div>
                 </div>
             </header>
+
+            <EventNavbar
+                edicaoId={id}
+                eventoId={eventoId}
+            />
 
             {/* Lista de Submissões */}
             <div className="space-y-4">

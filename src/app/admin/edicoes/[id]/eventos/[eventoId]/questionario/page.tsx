@@ -1,19 +1,20 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
-import { 
-  ArrowLeft, 
-  Plus, 
-  Trash2, 
-  HelpCircle, 
-  BarChart3, 
-  FileText,
-  Check,
-  Settings2
+import { EventNavbar } from '../components/EventNavbar';
+import {
+    ArrowLeft,
+    Plus,
+    Trash2,
+    HelpCircle,
+    BarChart3,
+    FileText,
+    Check,
+    Settings2
 } from 'lucide-react';
-import { 
-  adicionarPerguntaAction, 
-  removerPerguntaAction, 
-  editarPerguntaAction 
+import {
+    adicionarPerguntaAction,
+    removerPerguntaAction,
+    editarPerguntaAction
 } from './actions';
 
 export default async function GestaoQuestionarioPage({
@@ -34,8 +35,8 @@ export default async function GestaoQuestionarioPage({
         <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             {/* Header */}
             <header className="mb-10">
-                <Link 
-                    href={`/admin/edicoes/${id}`} 
+                <Link
+                    href={`/admin/edicoes/${id}`}
                     className="group flex items-center gap-2 text-ufla-blue text-[10px] font-black uppercase tracking-[0.2em] mb-4 hover:text-blue-900 transition-colors"
                 >
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
@@ -56,6 +57,11 @@ export default async function GestaoQuestionarioPage({
                 </div>
             </header>
 
+            <EventNavbar
+                edicaoId={id}
+                eventoId={eventoId}
+            />
+
             {/* Formulário: Adicionar Novo Critério */}
             <section className="bg-slate-900 p-8 rounded-[2.5rem] shadow-2xl mb-12 relative overflow-hidden">
                 <div className="relative z-10">
@@ -63,7 +69,7 @@ export default async function GestaoQuestionarioPage({
                         <Plus className="w-3 h-3" strokeWidth={3} />
                         Novo Critério de Avaliação
                     </h2>
-                    
+
                     <form action={adicionarPerguntaAction} className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <input type="hidden" name="eventoId" value={eventoId} />
                         <input type="hidden" name="edicaoId" value={id} />
@@ -113,8 +119,8 @@ export default async function GestaoQuestionarioPage({
                 </div>
 
                 {evento.perguntas.map((p) => (
-                    <div 
-                        key={p.id} 
+                    <div
+                        key={p.id}
                         className="group bg-white border border-slate-200 rounded-[2rem] shadow-sm hover:border-ufla-blue transition-all overflow-hidden"
                     >
                         <form action={editarPerguntaAction} className="p-6">
@@ -125,15 +131,14 @@ export default async function GestaoQuestionarioPage({
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                 <div className="flex-1 flex items-center gap-5">
                                     {/* Ícone Indicador de Tipo */}
-                                    <div className={`p-4 rounded-2xl shrink-0 ${
-                                        p.tipo === 'ESCALA' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
-                                    }`}>
+                                    <div className={`p-4 rounded-2xl shrink-0 ${p.tipo === 'ESCALA' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'
+                                        }`}>
                                         {p.tipo === 'ESCALA' ? <BarChart3 className="w-6 h-6" /> : <FileText className="w-6 h-6" />}
                                     </div>
-                                    
+
                                     {/* Área de Edição Texto e Tipo */}
                                     <div className="flex-1 space-y-2">
-                                        <input 
+                                        <input
                                             name="texto"
                                             defaultValue={p.texto}
                                             title="Editar texto da pergunta"
@@ -154,7 +159,7 @@ export default async function GestaoQuestionarioPage({
                                 </div>
 
                                 {/* Ações: Salvar Alterações */}
-                                <button 
+                                <button
                                     type="submit"
                                     title="Salvar alterações"
                                     className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-5 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
@@ -164,7 +169,7 @@ export default async function GestaoQuestionarioPage({
                                 </button>
                             </div>
                         </form>
-                        
+
                         {/* Rodapé do Card: Ação de Exclusão */}
                         <div className="bg-slate-50 px-8 py-3 flex justify-between items-center border-t border-slate-100">
                             <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">ID #{p.id}</span>
@@ -172,8 +177,8 @@ export default async function GestaoQuestionarioPage({
                                 <input type="hidden" name="id" value={p.id} />
                                 <input type="hidden" name="edicaoId" value={id} />
                                 <input type="hidden" name="eventoId" value={eventoId} />
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     title="Excluir este critério definitivamente"
                                     className="flex items-center gap-1.5 text-[9px] font-black uppercase text-slate-400 hover:text-red-600 transition-all"
                                 >
