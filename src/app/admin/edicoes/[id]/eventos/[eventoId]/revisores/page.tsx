@@ -62,11 +62,11 @@ export default async function RevisoresEventoPage({
         <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             <header className="mb-10">
                 <Link
-                    href={`/admin/edicoes/${id}/eventos/${eventoId}`}
+                    href={`/admin/edicoes/${id}`}
                     className="group flex items-center gap-2 text-ufla-blue text-[10px] font-black uppercase tracking-[0.2em] mb-4 hover:text-blue-900 transition-colors"
                 >
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-                    Voltar para o Evento
+                    Voltar para a Edição
                 </Link>
 
                 <div className="flex items-center gap-4">

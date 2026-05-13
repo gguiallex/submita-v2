@@ -10,7 +10,11 @@ import {
     AlertCircle,
     CheckCircle2,
 } from "lucide-react";
-import { atribuirRevisorAction, removerAtribuicaoAction } from "./actions";
+import {
+    atribuirRevisorAction,
+    removerAtribuicaoAction,
+    atribuirAutomaticamenteAction,
+} from "./actions";
 import { EventNavbar } from "../components/EventNavbar";
 
 export default async function AtribuicoesPage({
@@ -74,11 +78,11 @@ export default async function AtribuicoesPage({
         <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             <header className="mb-10">
                 <Link
-                    href={`/admin/edicoes/${id}/eventos/${eventoId}`}
+                    href={`/admin/edicoes/${id}`}
                     className="group flex items-center gap-2 text-ufla-blue text-[10px] font-black uppercase tracking-[0.2em] mb-4 hover:text-blue-900 transition-colors"
                 >
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-                    Voltar para o Evento
+                    Voltar para a Edição
                 </Link>
 
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -101,24 +105,38 @@ export default async function AtribuicoesPage({
                         </div>
                     </div>
 
-                    {emailsRevisores.length > 0 ? (
-                        <a
-                            href={mailtoUrl}
-                            className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all shadow-lg active:scale-95"
-                        >
-                            <Mail className="w-4 h-4" />
-                            Enviar e-mail para revisores
-                        </a>
-                    ) : (
-                        <button
-                            type="button"
-                            disabled
-                            className="flex items-center justify-center gap-2 bg-slate-200 text-slate-400 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] cursor-not-allowed"
-                        >
-                            <Mail className="w-4 h-4" />
-                            Nenhum revisor atribuído
-                        </button>
-                    )}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <form action={atribuirAutomaticamenteAction}>
+                            <input type="hidden" name="edicaoId" value={id} />
+                            <input type="hidden" name="eventoId" value={eventoId} />
+
+                            <button
+                                type="submit"
+                                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-orange-600 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-orange-700 transition-all shadow-lg active:scale-95"
+                            >
+                                Gerar automaticamente
+                            </button>
+                        </form>
+
+                        {emailsRevisores.length > 0 ? (
+                            <a
+                                href={mailtoUrl}
+                                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all shadow-lg active:scale-95"
+                            >
+                                <Mail className="w-4 h-4" />
+                                Enviar e-mail
+                            </a>
+                        ) : (
+                            <button
+                                type="button"
+                                disabled
+                                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-200 text-slate-400 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] cursor-not-allowed"
+                            >
+                                <Mail className="w-4 h-4" />
+                                Nenhum revisor atribuído
+                            </button>
+                        )}
+                    </div>
                 </div>
             </header>
 
@@ -163,11 +181,10 @@ export default async function AtribuicoesPage({
                                         </span>
 
                                         <span
-                                            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${
-                                                atingiuLimite
-                                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                                    : "bg-amber-50 text-amber-600 border-amber-100"
-                                            }`}
+                                            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${atingiuLimite
+                                                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                                : "bg-amber-50 text-amber-600 border-amber-100"
+                                                }`}
                                         >
                                             {atingiuLimite ? (
                                                 <CheckCircle2 className="w-3 h-3" />

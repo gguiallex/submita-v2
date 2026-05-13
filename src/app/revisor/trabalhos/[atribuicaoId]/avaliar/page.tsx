@@ -115,6 +115,25 @@ export default async function ResponderBaremaPage({
                                         placeholder="Nota de 0 a 10"
                                         className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-ufla-blue"
                                     />
+                                ) : pergunta.tipo === "MULTIPLA_ESCOLHA" ? (
+                                    <select
+                                        id={`pergunta-${pergunta.id}`}
+                                        name={`pergunta-${pergunta.id}`}
+                                        required={pergunta.obrigatoria}
+                                        className="w-full bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:ring-2 focus:ring-ufla-blue"
+                                    >
+                                        <option value="">Selecione uma opção</option>
+
+                                        {pergunta.opcoes
+                                            ?.split(";")
+                                            .map((opcao) => opcao.trim())
+                                            .filter(Boolean)
+                                            .map((opcao) => (
+                                                <option key={opcao} value={opcao}>
+                                                    {opcao}
+                                                </option>
+                                            ))}
+                                    </select>
                                 ) : (
                                     <textarea
                                         id={`pergunta-${pergunta.id}`}

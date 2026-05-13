@@ -41,7 +41,7 @@ export default async function TrabalhosEventoPage({
                     className="group flex items-center gap-2 text-ufla-blue text-[10px] font-black uppercase tracking-[0.2em] mb-4 hover:text-blue-900 transition-colors"
                 >
                     <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-                    Voltar para o Evento
+                    Voltar para a Edição
                 </Link>
                 <div className="flex items-center gap-4">
                     <div className="p-3 bg-amber-600 text-white rounded-2xl shadow-lg shadow-amber-100">
