@@ -131,7 +131,7 @@ export default async function VisualizarTrabalhoPage({
                 </section>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                    {evento.exigirPdf && submissao.arquivoUrl && (
+                    {evento.exigirPdf && submissao.arquivoUrl ? (
                         <a
                             href={`/uploads/${submissao.arquivoUrl}`}
                             target="_blank"
@@ -140,11 +140,16 @@ export default async function VisualizarTrabalhoPage({
                             <Download className="w-4 h-4" />
                             Visualizar PDF
                         </a>
+                    ) : (
+                        <div className="inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-400 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px]">
+                            <FileText className="w-4 h-4" />
+                            PDF não disponível
+                        </div>
                     )}
 
                     <Link
                         href={`/revisor/trabalhos/${atribuicao.id}/avaliar`}
-                        className="inline-flex items-center justify-center gap-2 bg-ufla-blue text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-900 transition-all"
+                        className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-ufla-blue to-blue-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-all shadow-xl active:scale-95"
                     >
                         <ClipboardCheck className="w-4 h-4" />
                         Responder Barema

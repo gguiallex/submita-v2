@@ -110,21 +110,25 @@ export default async function TrabalhosEventoPage({
                             </div>
 
                             {/* Ações Laterais */}
-                            <div className="flex flex-row lg:flex-col justify-end gap-3 min-w-[180px]">
-                                <a
-                                    href={`/uploads/${submissao.arquivoUrl}`}
-                                    target="_blank"
-                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-100 text-slate-700 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all"
-                                >
-                                    <Download className="w-4 h-4" />
-                                    Baixar PDF
-                                </a>
+                            <div className="flex flex-row lg:flex-col justify-end gap-3 min-w-[220px]">
                                 <Link
                                     href={`/admin/edicoes/${id}/eventos/${eventoId}/trabalhos/${submissao.id}`}
-                                    className="flex-1 flex items-center justify-center gap-2 bg-slate-900 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-ufla-blue transition-all group/btn"
+                                    className="group flex-1 flex items-center justify-center gap-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white py-5 px-6 rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.18em] hover:from-ufla-blue hover:to-blue-900 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-[0.98]"
                                 >
-                                    Visualizar
-                                    <ChevronRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-all">
+                                        <FileText className="w-4 h-4" />
+                                    </div>
+
+                                    <div className="flex flex-col items-start">
+                                        <span className="text-[9px] text-white/60 font-bold tracking-widest">
+                                            Abrir submissão
+                                        </span>
+                                        <span className="text-xs font-black uppercase">
+                                            Visualizar Trabalho
+                                        </span>
+                                    </div>
+
+                                    <ChevronRight className="w-4 h-4 ml-auto group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </div>
                         </div>

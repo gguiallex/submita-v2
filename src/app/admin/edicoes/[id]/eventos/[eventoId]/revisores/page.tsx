@@ -10,7 +10,7 @@ import {
     Tag,
 } from 'lucide-react';
 import {
-    adicionarRevisorAction,
+    vincularRevisorEventoAction,
     removerRevisorEventoAction,
 } from './actions';
 import { EventNavbar } from '../components/EventNavbar';
@@ -46,8 +46,16 @@ export default async function RevisoresEventoPage({
         },
     });
 
-    const departamentos = await prisma.departamento.findMany({
-        orderBy: { sigla: 'asc' },
+    const revisoresDisponiveis = await prisma.usuario.findMany({
+        where: {
+            role: 'REVISOR',
+        },
+        include: {
+            departamento: true,
+        },
+        orderBy: {
+            nome: 'asc',
+        },
     });
 
     if (!evento) {
@@ -173,63 +181,41 @@ export default async function RevisoresEventoPage({
                     <div className="flex items-center gap-3 mb-8">
                         <UserPlus className="w-6 h-6 text-purple-300" />
                         <h2 className="text-xl font-black uppercase italic tracking-tighter">
-                            Novo Revisor
+                            Vincular Revisor
                         </h2>
                     </div>
 
-                    <form action={adicionarRevisorAction} className="space-y-5">
+                    <form action={vincularRevisorEventoAction} className="space-y-5">
                         <input type="hidden" name="eventoId" value={eventoId} />
                         <input type="hidden" name="edicaoId" value={id} />
 
                         <div>
-                            <label htmlFor="nome" className="text-[10px] font-black uppercase tracking-widest text-purple-300 mb-2 block">
-                                Nome Completo
+                            <label
+                                htmlFor="usuarioId"
+                                className="text-[10px] font-black uppercase tracking-widest text-purple-300 mb-2 block"
+                            >
+                                Revisor existente
                             </label>
-                            <input
-                                id="nome"
-                                name="nome"
-                                required
-                                placeholder="Nome do revisor"
-                                className="w-full bg-white/10 border-none rounded-xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-purple-400 transition-all text-white"
-                            />
-                        </div>
 
-                        <div>
-                            <label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-purple-300 mb-2 block">
-                                E-mail Institucional
-                            </label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                required
-                                placeholder="email@ufla.br"
-                                className="w-full bg-white/10 border-none rounded-xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-purple-400 transition-all text-white"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="departamentoId" className="text-[10px] font-black uppercase tracking-widest text-purple-300 mb-2 block">
-                                Departamento
-                            </label>
                             <select
-                                id="departamentoId"
-                                name="departamentoId"
+                                id="usuarioId"
+                                name="usuarioId"
                                 required
                                 defaultValue=""
+                                title="Selecione um revisor existente"
                                 className="w-full bg-white/10 border-none rounded-xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-purple-400 transition-all text-white appearance-none"
                             >
                                 <option value="" disabled className="text-slate-900">
-                                    Selecione...
+                                    Selecione um revisor...
                                 </option>
 
-                                {departamentos.map((departamento) => (
+                                {revisoresDisponiveis.map((revisor) => (
                                     <option
-                                        key={departamento.id}
-                                        value={departamento.id}
+                                        key={revisor.id}
+                                        value={revisor.id}
                                         className="text-slate-900"
                                     >
-                                        {departamento.sigla}
+                                        {revisor.nome} {revisor.departamento?.sigla ? `- ${revisor.departamento.sigla}` : ''}
                                     </option>
                                 ))}
                             </select>
@@ -237,7 +223,7 @@ export default async function RevisoresEventoPage({
 
                         <div>
                             <p className="text-[10px] font-black uppercase tracking-widest text-purple-300 mb-3">
-                                Áreas de Especialidade
+                                Áreas no Evento
                             </p>
 
                             <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -270,7 +256,7 @@ export default async function RevisoresEventoPage({
                             type="submit"
                             className="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-lg mt-4 active:scale-95"
                         >
-                            Adicionar Revisor
+                            Vincular ao Evento
                         </button>
                     </form>
                 </aside>
