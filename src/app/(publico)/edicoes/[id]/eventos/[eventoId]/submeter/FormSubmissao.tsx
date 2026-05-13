@@ -21,9 +21,21 @@ interface Props {
     eventoSigla: string;
     temas: Tema[];
     departamentos: Departamento[];
+    exigirResumo: boolean;
+    exigirPdf: boolean;
+    submissaoAnonima: boolean;
 }
 
-export default function FormSubmissao({ edicaoId, eventoId, eventoSigla, temas, departamentos }: Props) {
+export default function FormSubmissao({
+    edicaoId,
+    eventoId,
+    eventoSigla,
+    temas,
+    departamentos,
+    exigirResumo,
+    exigirPdf,
+    submissaoAnonima
+}: Props) {
     const [autores, setAutores] = useState([{ nome: '', email: '', departamento: departamentos[0]?.sigla || 'Geral' }]);
     const [temasSelecionados, setTemasSelecionados] = useState<number[]>([]);
 
@@ -72,17 +84,21 @@ export default function FormSubmissao({ edicaoId, eventoId, eventoSigla, temas, 
                         required
                     />
                 </div>
-                <div>
-                    <label htmlFor="resumo" className="block text-sm font-bold text-slate-700 mb-2">Resumo Acadêmico</label>
-                    <textarea
-                        id="resumo"
-                        name="resumo"
-                        rows={6}
-                        placeholder="Escreva o resumo acadêmico..."
-                        className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue resize-none text-slate-800 transition-all"
-                        required
-                    ></textarea>
-                </div>
+                {exigirResumo && (
+                    <div>
+                        <label htmlFor="resumo" className="block text-sm font-bold text-slate-700 mb-2">
+                            Resumo Acadêmico
+                        </label>
+                        <textarea
+                            id="resumo"
+                            name="resumo"
+                            rows={6}
+                            placeholder="Escreva o resumo acadêmico..."
+                            className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue resize-none text-slate-800 transition-all"
+                            required
+                        />
+                    </div>
+                )}
             </div>
 
             {/* SEÇÃO DE AUTORES (Design Original) */}
@@ -144,22 +160,26 @@ export default function FormSubmissao({ edicaoId, eventoId, eventoSigla, temas, 
             </div>
 
             {/* PDF UPLOAD (Recuperado) */}
-            <div className="p-8 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 hover:border-ufla-blue transition-all group text-center relative">
-                <label htmlFor="arquivo" className="block text-sm font-black text-slate-700 mb-3 uppercase tracking-widest cursor-pointer">
-                    <UploadCloud className="w-5 h-5 inline-block mr-2 mb-1" />
-                    Documento do Trabalho (PDF)
-                </label>
-                <input
-                    id="arquivo"
-                    name="arquivo"
-                    type="file"
-                    accept=".pdf"
-                    title="Selecione o arquivo PDF do seu trabalho"
-                    className="w-full max-w-xs mx-auto text-sm text-slate-500 file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-ufla-blue file:text-white hover:file:bg-blue-900 cursor-pointer transition-all"
-                    required
-                />
-                <p className="mt-3 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Apenas PDF • Máx 10MB</p>
-            </div>
+            {exigirPdf && (
+                <div className="p-8 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 hover:border-ufla-blue transition-all group text-center relative">
+                    <label htmlFor="arquivo" className="block text-sm font-black text-slate-700 mb-3 uppercase tracking-widest cursor-pointer">
+                        <UploadCloud className="w-5 h-5 inline-block mr-2 mb-1" />
+                        Documento do Trabalho (PDF)
+                    </label>
+                    <input
+                        id="arquivo"
+                        name="arquivo"
+                        type="file"
+                        accept=".pdf"
+                        title="Selecione o arquivo PDF do seu trabalho"
+                        className="w-full max-w-xs mx-auto text-sm text-slate-500 file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-ufla-blue file:text-white hover:file:bg-blue-900 cursor-pointer transition-all"
+                        required
+                    />
+                    <p className="mt-3 text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
+                        Apenas PDF • Máx 10MB
+                    </p>
+                </div>
+            )}
 
             {/* PALAVRAS-CHAVE E TEMAS (Design Antigo Restaurado) */}
             <div className="grid md:grid-cols-2 gap-8 pt-4">
@@ -190,11 +210,10 @@ export default function FormSubmissao({ edicaoId, eventoId, eventoSigla, temas, 
                                     key={t.id}
                                     type="button"
                                     onClick={() => toggleTema(t.id)}
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-1 ${
-                                        ativo
-                                            ? 'bg-ufla-blue text-white border-ufla-blue shadow-md'
-                                            : 'bg-white text-slate-500 border-slate-200 hover:border-ufla-blue'
-                                    }`}
+                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border flex items-center gap-1 ${ativo
+                                        ? 'bg-ufla-blue text-white border-ufla-blue shadow-md'
+                                        : 'bg-white text-slate-500 border-slate-200 hover:border-ufla-blue'
+                                        }`}
                                 >
                                     {ativo && <Check className="w-3 h-3" />}
                                     {t.nome}

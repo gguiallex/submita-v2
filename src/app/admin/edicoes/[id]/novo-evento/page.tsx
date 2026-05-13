@@ -14,6 +14,15 @@ export default async function NovoEventoPage({ params }: { params: Promise<{ id:
         const titulo = formData.get('titulo') as string;
         const sigla = formData.get('sigla') as string;
         const adminId = Number(formData.get('adminId'));
+        const dataInicioRaw = formData.get('dataInicio');
+        const dataFimRaw = formData.get('dataFim');
+
+        const maxRevisoresPorTrabalho = Number(formData.get('maxRevisoresPorTrabalho'));
+        const maxTrabalhosPorRevisor = Number(formData.get('maxTrabalhosPorRevisor'));
+
+        const exigirResumo = formData.get('exigirResumo') === 'on';
+        const exigirPdf = formData.get('exigirPdf') === 'on';
+        const submissaoAnonima = formData.get('submissaoAnonima') === 'on';
 
         await prisma.evento.create({
             data: {
@@ -21,6 +30,13 @@ export default async function NovoEventoPage({ params }: { params: Promise<{ id:
                 sigla,
                 adminId,
                 edicaoId,
+                dataInicio: dataInicioRaw ? new Date(String(dataInicioRaw)) : null,
+                dataFim: dataFimRaw ? new Date(String(dataFimRaw)) : null,
+                maxRevisoresPorTrabalho,
+                maxTrabalhosPorRevisor,
+                exigirResumo,
+                exigirPdf,
+                submissaoAnonima,
             }
         });
 
@@ -47,12 +63,114 @@ export default async function NovoEventoPage({ params }: { params: Promise<{ id:
                         <input name="sigla" type="text" placeholder="Ex: CIUFLA" className="text-slate-800 w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue" required />
                     </div>
                     <div>
-                        <label className="block text-sm font-black text-slate-800 mb-2 uppercase">Responsável</label>
-                        <select name="adminId" className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue bg-white text-slate-800" required>
+                        <label htmlFor="adminId" className="block text-sm font-black text-slate-800 mb-2 uppercase">
+                            Responsável
+                        </label>
+                        <select name="adminId" id="adminId" title="Selecione o responsável pelo evento" className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue bg-white text-slate-800" required>
                             {usuarios.map(u => (
                                 <option key={u.id} value={u.id}>{u.nome}</option>
                             ))}
                         </select>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label htmlFor="dataInicio" className="block text-sm font-black text-slate-800 mb-2 uppercase">
+                            Data de Início
+                        </label>
+                        <input
+                            name="dataInicio"
+                            id="dataInicio"
+                            type="date"
+                            className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue text-slate-800"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="dataFim" className="block text-sm font-black text-slate-800 mb-2 uppercase">
+                            Data de Fim
+                        </label>
+                        <input
+                            id="dataFim"
+                            name="dataFim"
+                            type="date"
+                            className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue text-slate-800"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label htmlFor="maxRevisoresPorTrabalho" className="block text-sm font-black text-slate-800 mb-2 uppercase">
+                            Máx. Revisores por Trabalho
+                        </label>
+                        <input
+                            id="maxRevisoresPorTrabalho"
+                            name="maxRevisoresPorTrabalho"
+                            type="number"
+                            min={1}
+                            defaultValue={2}
+                            required
+                            className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue text-slate-800"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="maxTrabalhosPorRevisor" className="block text-sm font-black text-slate-800 mb-2 uppercase">
+                            Máx. Trabalhos por Revisor
+                        </label>
+                        <input
+                            id="maxTrabalhosPorRevisor"
+                            name="maxTrabalhosPorRevisor"
+                            type="number"
+                            min={1}
+                            defaultValue={5}
+                            required
+                            className="w-full p-4 border border-slate-300 rounded-2xl outline-none focus:ring-2 focus:ring-ufla-blue text-slate-800"
+                        />
+                    </div>
+                </div>
+
+                <div className="border-t border-slate-200 pt-6">
+                    <h2 className="text-sm font-black text-slate-800 uppercase mb-4">
+                        Regras de Submissão
+                    </h2>
+
+                    <div className="space-y-3">
+                        <label className="flex items-center gap-3 bg-slate-50 rounded-2xl p-4 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                name="exigirResumo"
+                                defaultChecked
+                                className="w-5 h-5 accent-blue-700"
+                            />
+                            <span className="font-bold text-slate-700">
+                                Exigir resumo na submissão
+                            </span>
+                        </label>
+
+                        <label className="flex items-center gap-3 bg-slate-50 rounded-2xl p-4 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                name="exigirPdf"
+                                defaultChecked
+                                className="w-5 h-5 accent-blue-700"
+                            />
+                            <span className="font-bold text-slate-700">
+                                Exigir arquivo PDF
+                            </span>
+                        </label>
+
+                        <label className="flex items-center gap-3 bg-slate-50 rounded-2xl p-4 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                name="submissaoAnonima"
+                                className="w-5 h-5 accent-blue-700"
+                            />
+                            <span className="font-bold text-slate-700">
+                                Submissão anônima
+                            </span>
+                        </label>
                     </div>
                 </div>
 
