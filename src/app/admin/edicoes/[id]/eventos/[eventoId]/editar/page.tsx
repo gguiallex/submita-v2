@@ -19,7 +19,7 @@ export default async function EditarEventoPage({
     if (!evento) return notFound();
 
     return (
-        <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             <header className="mb-10">
                 <Link
                     href={`/admin/edicoes/${id}`}

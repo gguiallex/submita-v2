@@ -33,7 +33,7 @@ export default async function TrabalhosEventoPage({
     if (!evento) return <div className="p-8 text-center font-bold text-red-500">Evento não encontrado</div>;
 
     return (
-        <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             {/* Header */}
             <header className="mb-10">
                 <Link

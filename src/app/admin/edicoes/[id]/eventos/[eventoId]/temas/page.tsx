@@ -29,7 +29,7 @@ export default async function VincularTemasEventoPage({
     const temasVinculadosIds = evento.temas.map(t => t.id);
 
     return (
-        <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+        <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
             <header className="mb-10">
                 <Link
                     href={`/admin/edicoes/${id}`}

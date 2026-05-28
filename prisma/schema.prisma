@@ -68,10 +68,21 @@ model Tema {
   revisoresEvento  RevisorEvento[] @relation("RevisorTemas")
 }
 
+model UnidadeAcademica {
+  id        Int       @id @default(autoincrement())
+  sigla     String    @unique
+  nome      String
+
+  departamentos  Departamento[]
+}
+
 model Departamento {
   id        Int       @id @default(autoincrement())
   sigla     String    @unique
-  descricao String
+  nome      String
+
+  UnidadeAcademicaId Int
+  UnidadeAcademica   UnidadeAcademica @relation(fields: [UnidadeAcademicaId], references: [id])
   
   usuarios  Usuario[]
   autores   Autor[]

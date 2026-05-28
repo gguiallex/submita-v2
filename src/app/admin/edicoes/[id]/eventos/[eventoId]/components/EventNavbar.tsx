@@ -10,7 +10,8 @@ import {
     ClipboardCheck,
     FileSearch,
     UserCheck,
-    Users
+    Users,
+    BarChart3
 } from "lucide-react";
 
 type Props = {
@@ -71,11 +72,18 @@ export function EventNavbar({
             hover: "hover:bg-indigo-600 hover:text-white"
         },
         {
+            href: `${base}/relatorios`,
+            label: "Relatórios",
+            icon: BarChart3,
+            active: "bg-red-600 text-white shadow-lg shadow-indigo-100",
+            hover: "hover:bg-red-600 hover:text-white"
+        },
+        {
             href: `${base}/editar`,
             label: "Configurações",
             icon: Settings2,
-            active: "bg-slate-900 text-white shadow-lg shadow-slate-200",
-            hover: "hover:bg-slate-900 hover:text-white"
+            active: "bg-slate-600 text-white shadow-lg shadow-slate-100",
+            hover: "hover:bg-slate-600 hover:text-white"
         }
     ];
 
@@ -94,7 +102,7 @@ export function EventNavbar({
                             href={item.href}
                             className={`
                                 flex items-center gap-2
-                                px-5 py-4
+                                px-4 py-4
                                 rounded-2xl
                                 text-[10px]
                                 font-black

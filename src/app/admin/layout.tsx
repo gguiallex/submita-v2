@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 // Importando os ícones
-import { Calendar, Users, LayoutDashboard, LogOut, Settings, PlusCircle } from 'lucide-react';
+import { Calendar, Users, LayoutDashboard, LogOut, Settings, PlusCircle, Building2, Paperclip } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,9 +26,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span>Edições</span>
           </Link>
 
-          <Link href="/admin/temas" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
-            <PlusCircle className="w-5 h-5 opacity-70 group-hover:opacity-100" strokeWidth={2} />
-            <span>Áreas Temáticas</span>
+          <Link /*href="/admin/temas"*/ href="/admin/unidadesAcademicas" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
+            <Building2 className="w-5 h-5 opacity-70 group-hover:opacity-100" strokeWidth={2} />
+            <span>Unidade Acadêmica</span>
           </Link>
 
           <Link href="/admin/departamentos" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
@@ -36,14 +36,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span>Departamentos</span>
           </Link>
 
-          <div className="pt-6 pb-2">
-            <p className="px-3 text-[10px] uppercase font-black text-blue-300/50 tracking-[0.2em]">Configurações</p>
-          </div>
+          <Link href="/admin/temas" /*href="/admin/unidadesAcademicas"*/ className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
+            <Paperclip className="w-5 h-5 opacity-70 group-hover:opacity-100" strokeWidth={2} />
+            <span>Temas</span>
+          </Link>
 
-          <Link href="/admin/revisores" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
+          {/*<Link href="/admin/revisores" className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 transition-all font-medium text-blue-100 group">
             <Users className="w-5 h-5 opacity-70 group-hover:opacity-100" strokeWidth={2} />
             <span>Revisores</span>
-          </Link>
+          </Link>*/}
         </nav>
 
         <div className="p-6 mt-auto border-t border-white/5 bg-blue-950/20">
